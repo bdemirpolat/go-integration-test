@@ -32,5 +32,5 @@ jobs:
       - name: Run Tests
         run: go test ./...
         env:
-          DATABASE_NAME: "postgres://test:test@localhost:5432/test"
+          DATABASE_NAME: "postgres://test:test@localhost:5432/test?sslmode=disable"
           LISTEN_ADDR: ":3000"
