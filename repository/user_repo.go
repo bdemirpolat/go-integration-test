@@ -14,7 +14,7 @@ type UserRepo struct {
 }
 
 func (u UserRepo) Create(user models.User) error {
-	stmt, err := u.DB.Prepare("INSERT INTO users (username) VALUES (?);")
+	stmt, err := u.DB.Prepare("INSERT INTO users (username) VALUES ($1)")
 	if err != nil {
 		return err
 	}

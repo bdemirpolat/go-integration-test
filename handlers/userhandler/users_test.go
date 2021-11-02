@@ -8,7 +8,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/suite"
 	"net/http/httptest"
-	"os"
 	"strings"
 	"testing"
 )
@@ -23,7 +22,6 @@ func TestUsersTestSuite(t *testing.T) {
 }
 
 func (s *UsersTestSuite) SetupSuite() {
-	os.Setenv("DATABASE_NAME", "test_database")
 	err := db.CreateDatabase()
 	s.Nil(err)
 	database := db.ConnectDB()

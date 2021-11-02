@@ -2,13 +2,13 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 	"os"
+	"os/exec"
 )
 
 func ConnectDB() *sql.DB {
-	db, err := sql.Open("sqlite3", fmt.Sprintf("file:%s.db", os.Getenv("DATABASE_NAME")))
+	db, err := sql.Open("postgres", os.Getenv("DATABASE_NAME"))
 	if err != nil {
 		panic(err)
 	}
@@ -20,17 +20,22 @@ func ConnectDB() *sql.DB {
 }
 
 func CreateTable(db *sql.DB) (sql.Result, error) {
-	res, err := db.Exec("CREATE TABLE `users` (`id` INTEGER PRIMARY KEY AUTOINCREMENT,`username` VARCHAR(64) NULL);")
+	res, err := db.Exec("create table users(id serial constraint users_pk primary key,username varchar);")
 	return res, err
 }
 
-
 func CreateDatabase() error {
-	_,err := os.Create(fmt.Sprintf("%s.db", os.Getenv("DATABASE_NAME")))
-	return err
+	cmd := exec.Command("createdb", "integration_test")
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	return cmd.Run()
 }
 
-
 func DeleteDatabase() error {
-	return os.Remove(fmt.Sprintf("%s.db", os.Getenv("DATABASE_NAME")))
+	cmd := exec.Command("dropdb", "-f","integration_test")
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	return cmd.Run()
 }
