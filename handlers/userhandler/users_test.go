@@ -22,10 +22,8 @@ func TestUsersTestSuite(t *testing.T) {
 }
 
 func (s *UsersTestSuite) SetupSuite() {
-	err := db.CreateDatabase()
-	s.Nil(err)
 	database := db.ConnectDB()
-	_, err = db.CreateTable(database)
+	_, err := db.CreateTable(database)
 	s.Nil(err)
 	userRepo := &repository.UserRepo{DB: database}
 	userHandler := &UserHandler{Repo: userRepo}
@@ -48,9 +46,4 @@ func (s *UsersTestSuite) TestCreateUser() {
 	defer res.Body.Close()
 	s.Nil(err)
 	s.Equal(200, res.StatusCode)
-}
-
-func (s *UsersTestSuite) TearDownSuite() {
-	err := db.DeleteDatabase()
-	s.Nil(err)
 }
